@@ -8,8 +8,16 @@ class Entity {
    * Это могут быть счета или доходы/расходы
    * (в зависимости от того, что наследуется от Entity)
    * */
-  static list(data, callback){
-
+  static URL = "";
+  static list(data, callback = f => f) {
+    const options = {
+      url: this.URL,
+      method: 'GET',
+      data: data,
+      responseType: 'json',
+      callback: callback
+    };
+    return createRequest(options);
   }
 
   /**
@@ -17,15 +25,31 @@ class Entity {
    * на сервер. (в зависимости от того,
    * что наследуется от Entity)
    * */
-  static create(data, callback) {
-
+  static create(data, callback = f => f) {
+    const modifiedData = Object.assign({ _method: 'PUT' }, data );
+    const options = {
+      url: this.URL,
+      data: modifiedData,
+      method: 'PUT',
+      responseType: 'json',
+      callback: callback,
+    };
+    return createRequest(options);
   }
 
   /**
    * Удаляет информацию о счёте или доходе/расходе
    * (в зависимости от того, что наследуется от Entity)
    * */
-  static remove(data, callback ) {
-
+  static remove(id = '', data, callback = f => f) {
+    const modifiedData = Object.assign({id, _method: 'DELETE'}, data);
+    const options = {
+      url: this.URL,
+      data: modifiedData,
+      method: 'DELETE',
+      responseType: 'json',
+      callback: callback,
+    };
+    return createRequest(options);
   }
 }
